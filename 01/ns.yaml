@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  gk-1
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gk-2
+
+---
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  gk-3
