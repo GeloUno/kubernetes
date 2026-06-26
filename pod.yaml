@@ -2,6 +2,62 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: backend
+  namespace: ns-1
+  labels:
+    company: GeloUno
+    project: "1"
+    type: backend
+spec:
+  containers:
+   - name: nginx
+     image: nginx:1.25.2
+     ports:
+      - containerPort: 80
+        
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: backend
+  namespace: ns-2
+  labels:
+    company: GeloUno
+    project: "2"
+    type: backend
+spec:
+  containers:
+   - name: nginx
+     image: nginx:1.25.2
+     ports:
+      - containerPort: 80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: ns-2
+  labels:
+    company: GeloUno
+    project: "2"
+    type: frontend
+spec:
+  containers:
+   - name: nginx
+     image: nginx:1.25.2
+     ports:
+      - containerPort: 80
+        
+---
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: frontend
+  namespace: ns-3
+  labels:
+    company: GeloUno
+    project: "3"
+    type: frontend
 spec:
   containers:
    - name: nginx
