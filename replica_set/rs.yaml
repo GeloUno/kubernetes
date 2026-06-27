@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: backend
+  namespace: default 
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+     tier: backend
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.25.2
+        
