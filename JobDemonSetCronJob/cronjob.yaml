@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sleeper
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      parallelism: 1
+      completions: 3
+      template:
+        spec:
+          containers:
+          - name: sleeper
+            image: ubuntu:24.04
+            command: ["sh", "-c","echo 'this app running && sleep'; sleep 10"]
+          restartPolicy: Never

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: DemonSet
+metadata:
+  name: backend
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      tier: backend
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      initContainer:
+      - name: sleep
+        image: nginx:1.44.2 
+        command: ["sleep","2"]
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+       
