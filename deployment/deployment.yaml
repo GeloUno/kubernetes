@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: default
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:     
+      tier: backend      
+  template:
+    metadata:
+      labels:
+        tier: backend
+    spec:
+      initContainers:
+      - name: sleep
+        image: nginx:1.25.2
+        command: ["sh", "-c","echo 'this app running && sleep'; sleep 10"]
+      containers:
+      - name: nginx
+        image: nginx:1.25.2       
