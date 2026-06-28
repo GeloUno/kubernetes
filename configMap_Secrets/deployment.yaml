@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      tier: restaurant     
+      type: backend
+      company: gk
+  template:
+    metadata:
+      labels:
+        tier: restaurant
+        type: backend
+        app: restaurant
+        company: gk
+    spec:
+      containers:
+      - name: restaurant
+        image: dummy.apiingo.com/library/backend:v1.0.0
+        envFrom:
+        - configMapRef:
+            name: restaurant-config
+        env:
+          - name: MYSQL_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: restaurant-secret
+                key: DB_USERNAME       
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: restaurant-secret
+                key: DB_PASSWORD
