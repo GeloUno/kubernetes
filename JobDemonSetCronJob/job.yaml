@@ -3,6 +3,8 @@ kind: Job
 metadata:
   name: pi
 spec:
+  parallelism: 2
+  completions: 5  
   backoffLimit: 4
   template:
    spec:

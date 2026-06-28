@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: DemonSet
+kind: DaemonSet
 metadata:
   name: backend
   namespace: default
@@ -12,9 +12,11 @@ spec:
       labels:
         tier: backend
     spec:
-      initContainer:
+      nodeSelector: 
+        topology.kubernetes.io/zone: zone-a
+      initContainers:
       - name: sleep
-        image: nginx:1.44.2 
+        image: nginx:1.14.2 
         command: ["sleep","2"]
       containers:
       - name: nginx
