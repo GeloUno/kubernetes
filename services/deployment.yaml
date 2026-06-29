@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-api
+  namespace: gk-09-api
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1    
+  selector:
+    matchLabels:      
+      tier: gk-api
+      company: gk-entertainment
+  template:
+    metadata:
+      labels:
+        app: gk-api
+        tier: gk-api
+        company: gk-entertainment
+    spec:
+      containers:
+      - name: gk-container
+        image: dummy.api.com/library/api:1.0.0       
+        ports:
+        - containerPort: 8080
+        envFrom:
+          - configMapRef:
+              name: api-config
