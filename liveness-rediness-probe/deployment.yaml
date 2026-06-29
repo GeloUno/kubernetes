@@ -1,0 +1,90 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  gk-ns
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: gk-svc
+  namespace: gk-ns
+spec:
+  selector:
+    app: gk-backend
+    tier: gk-tier
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-pod
+  namespace: gk-ns
+spec:
+  replicas: 3
+  strategy: 
+    type: Recreate      
+  selector:
+    matchLabels:
+      app: gk-backend
+      tier: gk-tier
+  template:
+    metadata:
+      labels:
+        app: gk-backend
+        tier: gk-tier
+        company: gk-company
+    spec:
+      terminationGracePeriodSeconds: 2
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+      - name: cheker
+        image: registry.k8s.io/busybox:1.27.2        
+        args:
+        - /bin/sh
+        - -c
+        - >
+          sleep 30;
+          touch /tmp/startup;
+          sleep 10;
+          touch /tmp/healthy;
+          while true; do
+            sleep $(shuf -i 2-10 -n 1);
+            touch /tmp/ready;
+            sleep $(shuf -i 2-10 -n 1);
+            rm /tmp/ready;
+          done
+        startupProbe: 
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          failureThreshold: 12
+          exec:
+            command:
+            - cat
+            - /tmp/startup
+        livenessProbe:
+          periodSeconds: 5
+          failureThreshold: 3
+          exec:
+            command:
+            - cat
+            - /tmp/healthy
+        readinessProbe:
+          periodSeconds: 2
+          failureThreshold: 1
+          exec:
+            command:
+              - cat
+              - /tmp/ready
+
+          
+
