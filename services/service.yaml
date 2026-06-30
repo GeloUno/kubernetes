@@ -1,8 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: gk-api
-  namespace: gk-09-api
+  name: gk-svc
+  namespace: gk-09-ns
 spec:
   type: ClusterIP
   selector:

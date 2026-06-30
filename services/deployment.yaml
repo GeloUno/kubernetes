@@ -1,8 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gk-api
-  namespace: gk-09-api
+  name: gk-09-pod
+  namespace: gk-09-ns
 spec:
   replicas: 3
   strategy:
