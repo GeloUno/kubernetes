@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gk-multi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-multi
+  namespace: gk-multi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-multi
+  template:
+    metadata:
+      labels:
+        app: web-multi
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25.2
+        ports:
+        - name: nginx-http
+          containerPort: 80
+      - name: apache
+        image: httpd:2.4
+        command:
+        - /bin/sh
+        - -c
+        args:
+        - |
+          sed -i 's/Listen 80/Listen 8080/' /usr/local/apache2/conf/httpd.conf
+          httpd-foreground
+        ports:
+        - name: apache-http
+          containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-multi
+  namespace: gk-multi
+spec:
+  selector:
+    app: web-multi
+  ports:
+  - name: nginx
+    port: 80
+    targetPort: 80
+    protocol: TCP
+
+  - name: apache
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
