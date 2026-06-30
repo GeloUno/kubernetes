@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: gk-11-rb-pod
+  namespace: gk-11-ns
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: gk-11-role-pod
+subjects:
+- kind: ServiceAccount
+  name: gk-11-sa
+  namespace: gk-11-ns

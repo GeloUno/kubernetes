@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sample-cluster-rbac
+
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: sample-sa
+  namespace: sample-cluster-rbac
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: sample-role
+rules:
+- apiGroups: [""]
+  resources: ["pods", "nodes"]
+  verbs: ["get", "watch", "list"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: sample-role-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: sample-role
+subjects:
+- kind: ServiceAccount
+  name: sample-sa
+  namespace: sample-cluster-rbac
