@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  mini-cpu
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-burn
+  namespace: mini-cpu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cpu-burn
+  template:
+    metadata:
+      labels:
+        app: cpu-burn
+    spec:
+      containers:
+      - name: stress
+        image: busybox
+        command: 
+        - sh
+        - -c
+        - |-
+          while true
+          do
+            i=0
+            while [ $i -lt 100000 ]
+            do
+              i=$((i+1))
+            done
+          done
+        resources:
+          requests:           
+            cpu: "25m"
+          limits:            
+            cpu: "100m"
+      - name: fast-cpu
+        image: busybox
+        command: 
+        - sh
+        - -c
+        - |-
+          while true
+          do
+            i=0
+            while [ $i -lt 100000 ]
+            do
+              i=$((i+1))
+            done
+          done
+        resources:
+          requests:           
+            cpu: "1000m"
+          limits:            
+            cpu: "10000m"
+        
