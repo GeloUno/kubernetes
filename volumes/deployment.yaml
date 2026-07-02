@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: www
+  namespace: volumes
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: www
+  template:
+    metadata:
+      labels:
+        app: www
+    spec:
+      volumes:
+      - name: files
+        configMap:
+          name: www
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        volumeMounts:
+        - name: files
+          mountPath: /usr/share/nginx/html
+        ports:
+        - containerPort: 80

@@ -1,0 +1,88 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: app-data
+  namespace: volumes
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 128Mi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-data-producer
+  namespace: volumes
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: app-data-producer
+  template:
+    metadata:
+      labels:
+        app: app-data-producer
+    spec:
+      terminationGracePeriodSeconds: 1
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: app-data
+      containers:
+      - name: producer
+        image: ubuntu:24.04
+        command:
+        - "/bin/bash"
+        - "-c"
+        args:
+        - >
+          while true; do
+            date >> /data/date.log;
+            sleep 5;
+          done
+        volumeMounts:
+        - name: data
+          mountPath: /data
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-data-consumer
+  namespace: volumes
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: app-data-consumer
+  template:
+    metadata:
+      labels:
+        app: app-data-consumer
+    spec:
+      terminationGracePeriodSeconds: 1
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: app-data
+      containers:
+      - name: consumer
+        image: ubuntu:24.04
+        command:
+        - "tail"
+        - "-n"
+        - "+1"
+        - "-f"
+        - "/data/date.log"
+        volumeMounts:
+        - name: data
+          mountPath: /data

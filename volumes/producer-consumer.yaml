@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-consumer
+  namespace: volumes
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: producer-consumer
+  template:
+    metadata:
+      labels:
+        app: producer-consumer
+    spec:
+      terminationGracePeriodSeconds: 1
+      volumes:
+      - name: data
+        emptyDir: {}
+      containers:
+      - name: producer
+        image: ubuntu:24.04
+        command:
+        - "/bin/bash"
+        - "-c"
+        args:
+        - >
+          while true; do
+            date >> /data/date.log;
+            sleep 2;
+          done
+        volumeMounts:
+        - name: data
+          mountPath: /data
+      - name: consumer
+        image: ubuntu:24.04
+        command:
+        - "tail"
+        - "-f"
+        - "/data/date.log"
+        volumeMounts:
+        - name: data
+          mountPath: /data
