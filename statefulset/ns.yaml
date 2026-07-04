@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gk-14-ns
+spec: {}
+
+
+
+#  kubectl create ns gk-14-ns \
+# > -n gk-14-ns \
+# > --dry-run=client \
+# > -o yaml > ns.yaml
