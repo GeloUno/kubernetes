@@ -1,0 +1,34 @@
+# Config for kind@v0.30.0
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: gk-13-cluster
+nodes:
+  - role: control-plane
+    image: &image "kindest/node:v1.33.4@sha256:25a6018e48dfcaee478f4a59af81157a437f15e6e140bf103f85a2e7cd0cbbf2"
+  - role: worker
+    image: *image
+  - role: worker
+    image: *image
+
+
+    #  kubectl config set-context --current --namespace=gk-13-ns 
+
+
+#     ╰─ watch '
+# echo "=== CONTEXT ==="
+# kubectl config current-context
+# echo
+# echo "=== NAMESPACE ==="
+# kubectl config view --minify --output "jsonpath={..namespace}"
+# echo
+# echo "=== NODES ==="
+# kubectl get nodes
+# echo
+# echo "=== DEPLOYMENTS ==="
+# kubectl get deploy -n gk-13-ns -o wide
+# echo
+# echo "=== PODS ==="
+# kubectl get pod -n gk-13-ns -o wide
+# echo
+# echo "=== CONFIGMAPS ==="
+# kubectl get cm -n gk-13-ns

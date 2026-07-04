@@ -1,0 +1,33 @@
+apiVersion: v1
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ConfigMap</title>
+    </head>
+    <body>
+        <h1>Edited ConfigMap</h1>
+        <p>Hello GeloUno!</p>
+    </body>
+    </html>
+kind: ConfigMap
+metadata:
+  name: gk-13-cm
+  namespace: gk-13-ns
+
+
+# kubectl edit cm gk-13-cm
+
+# kubectl create configmap gk-13-cm \
+# --from-file=index.html  \
+# -n gk-13-ns \
+# --dry-run=client \
+# -o yaml > cm.yaml
+
+# curl localhost:8080 -vk 2>&1 | grep -iE "host:"
+
+# kubectl exec -it deployment/gk-13-www -- cat /usr/share/nginx/html/index.html
+

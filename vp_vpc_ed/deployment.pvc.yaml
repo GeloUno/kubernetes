@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-13-pod-pvc-producer
+  namespace: gk-13-ns
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gk-13-pod-pvc-producer
+  template:
+    metadata:
+      labels:
+        app: gk-13-pod-pvc-producer
+    spec:
+      terminationGracePeriodSeconds: 5
+      volumes: 
+        - name: data
+          persistentVolumeClaim:
+            claimName: gk-13-pvc
+      containers:
+      - name: producer
+        image: ubuntu:22.04
+        command:
+          - "bin/bash"
+          - "-c"
+        args:
+          - >
+            while true; do
+              echo "Producing data...$(date)" >> /data/date.log;
+              sleep 5;
+            done
+        volumeMounts:
+        - name: data
+          mountPath: /data
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-13-pod-pvc-consumer
+  namespace: gk-13-ns
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gk-13-pod-pvc-consumer
+  template:
+    metadata:
+      labels:
+        app: gk-13-pod-pvc-consumer
+    spec:
+      terminationGracePeriodSeconds: 5
+      volumes: 
+        - name: data
+          persistentVolumeClaim:
+            claimName: gk-13-pvc
+      containers:
+      - name: consumer
+        image: ubuntu:22.04
+        command:
+          - "bin/bash"
+          - "-c"
+        args:
+          - >
+            while true; do
+              echo "Consuming data...$(date)" >> /data/date.log;
+              sleep 5;
+            done
+        volumeMounts:
+        - name: data
+          mountPath: /data
+
+
+# kubectl exec -it deployment/gk-13-pod-pvc-producer -c producer -- cat /data/date.log
+# kubectl exec -it deployment/gk-13-pod-pvc-consumer -c consumer -- cat /data/date.log
+
+# ╰─ kubectl rollout restart deployment gk-13-pod-pvc-producer 
+
+# kubectl rollout restart deployment gk-13-pod-pvc-consumer 
+
+# kubectl delete pod -l app=gk-13-pod-pvc-producer
+
+# kubectl delete deployment gk-13-pod-pvc-producer
+# kubectl delete deployment gk-13-pod-pvc-consumer
+
+# kubectl delete deploy gk-13-pod-pvc-producer gk-13-pod-pvc-consumer

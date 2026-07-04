@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: producer-consumer
+  namespace: gk-13-ns
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: producer-consumer
+  template:
+    metadata:
+      labels:
+        app: producer-consumer   
+    spec:
+      terminationGracePeriodSeconds: 5
+      volumes:
+        - name: data
+          emptyDir: {}
+      containers:
+      - name: producer
+        image: ubuntu:22.04
+        command:
+          - "bin/bash"
+          - "-c"
+        args:
+          - >
+            while true; do
+              echo "Producing data...$(date)" >> /data/date.log;
+              sleep 5;
+            done
+        volumeMounts:
+          - name:  data
+            mountPath: /data
+      - name: consumer
+        image: ubuntu:22.04
+        command:
+          - "bin/bash"
+          - "-c"
+        args:
+          - >
+            while true; do
+              echo "Consuming data...$(date)" >> /data/date.log;
+              sleep 5;
+            done
+        volumeMounts:
+          - name: data
+            mountPath: /data
+
+            # readOnly: true
+
+  # tail -f /data/date.log  --> echo "Consuming data...$(date)" >> /data/date.log; while sleep done -> delete
+       
+# kubectl exec -it deployment/producer-consumer -c producer -- cat /data/date.log
+# kubectl exec -it deployment/producer-consumer -c consumer -- cat /data/date.log

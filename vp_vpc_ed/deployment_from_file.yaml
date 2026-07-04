@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-13-www
+  namespace: gk-13-ns
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gk-13-www
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: gk-13-www
+        tier: frontend
+    spec:
+      volumes:
+        - name: file
+          configMap:
+            name: gk-13-cm
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        volumeMounts:
+          - name: file
+            mountPath: /usr/share/nginx/html
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+
+# kubectl scale deployment gk-13-www --replicas=1
+
+# kubectl port-forward deployment/gk-13-www 8080:80
+
+# watch '
+# echo "=== DEPLOYMENTS ==="
+# kubectl get deploy -n gk-13-ns -o wide
+# echo
+# echo "=== PODS ==="
+# kubectl get pod -n gk-13-ns -o wide
+# echo
+# echo "=== CONFIGMAPS ==="
+# kubectl get cm -n gk-13-ns
+# '
