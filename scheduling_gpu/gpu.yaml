@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  gk-15-ns
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-api
+  namespace: gk-15-ns
+spec:
+  replicas: 3
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: gpu-api
+      namespace: gk-15-ns
+  template:
+    metadata:
+      labels:
+        app: gpu-api
+        namespace: gk-15-ns
+    spec:
+      terminationGracePeriodSeconds: 1
+      tolerations:
+      - key: nvidia.com/gpu
+        operator: Equal
+        value: present
+        effect: NoSchedule 
+      initContainers:
+      - name: node-check
+        image: ubuntu:22.04
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        command:
+        - "/bin/bash"
+        - "-c"
+        args:
+        - >
+          test "${NODE_NAME}" = "gk-15-cluster-worker2"
+      containers:
+      - name: sleeper
+        image: ubuntu:22.04
+        command:
+          - "sleep"
+          - "infinity"
+        resources:
+          requests:
+            nvidia.com/gpu: "1"
+          limits:
+            nvidia.com/gpu: "1"
+       

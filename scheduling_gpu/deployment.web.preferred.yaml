@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  preferred-demo
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-preferred
+  namespace: preferred-demo
+
+spec:
+  replicas: 3
+
+  selector:
+    matchLabels:
+      app: pod-preferred
+
+  template:
+    metadata:
+      labels:
+        app: pod-preferred
+
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 40
+            preference:
+              matchExpressions:
+              - key: node-type
+                operator: In
+                values:
+                - web
+          - weight: 80
+            preference:
+               matchExpressions:
+               - key: zone
+                 operator: In
+                 values:
+                 - north
+          - weight: 30
+            preference:
+              matchExpressions:
+              - key: disk
+                operator: In
+                values:
+                - ssd
+              
+      containers:
+      - name: nginx
+        image: nginx:1.27
+       
+
+
+# ─ kubectl taint node gk-15-cluster-worker3 maintenance=true:NoExecute
+
+# kubectl taint node gk-15-cluster-worker3 maintenance=true:NoExecute-

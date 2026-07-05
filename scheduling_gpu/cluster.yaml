@@ -1,0 +1,42 @@
+# Config for kind@v0.30.0
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: gk-15-cluster
+nodes:
+  - role: control-plane
+    image: &image "kindest/node:v1.33.4@sha256:25a6018e48dfcaee478f4a59af81157a437f15e6e140bf103f85a2e7cd0cbbf2"
+  - role: worker
+    image: *image
+    labels: 
+      topology.kubernetes.io/zone: north
+  - role: worker
+    image: *image
+    labels:
+      topology.kubernetes.io/zone: north
+      cloud.google.com/gke-accelerator: nvidia-tesla-l4
+    kubeadmConfigPatches:
+      - |
+        kind: JoinConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            register-with-taints: "nvidia.com/gpu=present:NoSchedule"
+  - role: worker
+    image: *image
+    labels:
+      topology.kubernetes.io/zone: south
+
+
+# kubectl get nodes -L cloud.google.com/gke-accelerator -L topology.kubernetes.io/zone
+
+# kubectl patch nodes gk-15-cluster-worker2 \
+# --subresource='status' \
+# --type="json" \
+# -p="$(cat ./node_patch.json)"
+
+# kubectl label node gk-15-cluster-worker node-type=web
+
+# kubectl label node gk-15-cluster-worker2 node-type=db
+
+# kubectl label node gk-15-cluster-worker3 node-type=monitor
+
+# ─ kubectl get pods -n preferred-demo -o wide
