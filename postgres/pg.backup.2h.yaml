@@ -1,0 +1,9 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: ScheduledBackup
+metadata:
+  name: gk-pg-backup-2h
+  namespace: gk-14-ns
+spec:
+  schedule: "0 */2 * * *"
+  cluster:
+    name: gk-pg

@@ -1,0 +1,19 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: gk-pg
+  namespace: gk-14-ns
+spec:
+  instances: 3
+  storage:
+    size: 1Gi
+
+
+# kubectl get cluster,pod,pvc,svc,secret -n gk-14-ns  
+
+# ╰─ kubectl get endpointslices.discovery.k8s.io -n gk-14-ns | grep gk-pg 
+
+# watch -n 2 'kubectl get cluster,pod,svc,endpointslices.discovery.k8s.io -n gk-14-ns | grep -E "gk-pg|NAME"'
+
+# kubectl delete pod gk-pg-1 -n gk-14-ns
+
