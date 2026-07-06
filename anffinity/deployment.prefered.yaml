@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  replicas: 6
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      workload: backend
+  template:
+    metadata:
+      labels:
+        workload: backend
+    spec:
+      terminationGracePeriodSeconds: 1
+      affinity:
+        podAntiAffinity: 
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchLabels:
+                  workload: backend
+      containers:
+      - name: sleeper 
+        image: ubuntu:24.04
+        command:
+        - "sleep"
+        - "infinity"

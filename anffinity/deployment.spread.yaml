@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: backend
+
+spec:
+  replicas: 12
+
+  selector:
+    matchLabels:
+      workload: backend
+
+  template:
+    metadata:
+      labels:
+        workload: backend
+
+    spec:
+
+      topologySpreadConstraints:
+
+      - maxSkew: 1
+
+        topologyKey: kubernetes.io/hostname
+
+        whenUnsatisfiable: DoNotSchedule
+        nodeTaintsPolicy: Honor
+        labelSelector:
+          matchLabels:
+            workload: backend
+
+      containers:
+      - name: sleeper
+        image: ubuntu:24.04
+        command:
+        - sleep
+        - infinity
