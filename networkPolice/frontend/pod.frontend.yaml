@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    app: frontend
+  name: frontend-client
+  namespace: gk-19-frontend
+spec:
+  containers:
+  - command:
+    - sleep
+    - "3600"
+    image: curlimages/curl:8.12.1
+    name: frontend-client  
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
+
+#  kubectl run intruder -n gk-19-frontend --image curlimages/curl:8.12.1 --labels app=intruder --restart=Never --command -- sleep 3600
+
+#  kubectl run attacker-n default --image=curlimages/curl:8.12.1 --labels app=frontend --restart=Never --command -- sleep 86400

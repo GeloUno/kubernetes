@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-backend-to-database
+  namespace: gk-19-backend
+spec:
+  podSelector:
+    matchLabels:
+      app: gk-19-backend
+
+  policyTypes:
+    - Egress
+  
+
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: gk-19-database
+          
+          podSelector:
+            matchLabels:
+             app: database
+
+      ports:
+        - protocol: TCP
+          port: 5432
+        

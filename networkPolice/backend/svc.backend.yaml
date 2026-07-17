@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: gk-19-svc-backend
+    namespace: gk-19-backend
+    labels:
+     app: gk-19-backend
+spec:
+  ports:
+  - name: 80-80
+    port: 80  
+    targetPort: 80
+  selector:
+    app: gk-19-backend
+
+---
+ 
+#  kubectl create service clusterip gk-19-svc \
+# -n gk-19-backend \
+# --tcp=80:80 \
+# --dry-run=client \
+# -o yaml > svc.backend.yaml

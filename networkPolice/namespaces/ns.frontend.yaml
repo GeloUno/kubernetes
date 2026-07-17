@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gk-19-frontend
+  labels:
+    layer: frontend
+

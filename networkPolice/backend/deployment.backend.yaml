@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: gk-19-backend
+  name: backend
+  namespace: gk-19-backend
+spec:
+  replicas: 4
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: gk-19-backend
+  template:
+    metadata:
+      labels:
+        app: gk-19-backend
+    spec:
+      containers:
+      - image: nginx:1.27
+        name: nginx
+        ports:
+          - containerPort: 80       
+
+
+# ╰─ kubectl create deployment backend \
+# --image nginx:1.27 \
+# --replicas=2 \
+# -n gk-19-backend \
+# --dry-run=client \
+# -o yaml > deployment.backend.yaml

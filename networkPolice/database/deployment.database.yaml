@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: database
+  namespace: gk-19-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: database
+  template:
+    metadata:
+      labels:
+        app: database
+    spec:
+      containers:
+        - name: database
+          image: python:3.12-alpine
+          command:
+            - python
+            - -m
+            - http.server
+            - "5432"
+          ports:
+            - containerPort: 5432
