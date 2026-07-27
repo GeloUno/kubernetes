@@ -1,0 +1,50 @@
+replicaCount: 2
+
+fullnameOverride: gk-20-web
+
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort:
+  http: 80
+
+service:
+  type: ClusterIP
+  ports:
+    http: 8080
+    https: 8443
+
+tls:
+  enabled: true
+
+networkPolicy:
+  enabled: false
+
+pdb:
+  create: false
+
+resourcesPreset: none
+
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+podLabels:
+  environment: lab
+  owner: gelo
+  layer: web
+
+metrics:
+  enabled: true
+
+web:
+  title: "GK Helm LAB"
+  message: "Strona dostarczona przez ConfigMap i Helm"
+  

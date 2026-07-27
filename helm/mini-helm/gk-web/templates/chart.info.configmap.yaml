@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{printf "%s-%s" (include "gk-web.fullname" .) .Values.podLabels.environment }}-chart-info
+  labels:
+    app.kubernetes.io/name: {{ .Chart.Name | quote }}
+    app.kubernetes.io/instance: {{ .Release.Name | quote }}
+    helm.sh/chart-version: {{ .Chart.Version | quote }}
+
+    {{- range $key, $value := .Values.podLabels }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+
+data:
+  releaseName: {{ .Release.Name | quote }}
+  chartName: {{ .Chart.Name | quote }}
+  chartVersion: {{ .Chart.Version | quote }}
+  owner: {{ .Values.podLabels.owner | default "unknown" | quote }}
+
+  {{- if .Values.metrics.enabled }}
+  metricsStatus: "enabled"
+  {{- else }}
+  metricsStatus: "disabled"
+  {{- end }}

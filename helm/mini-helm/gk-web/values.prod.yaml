@@ -1,0 +1,35 @@
+replicaCount: 5
+
+podLabels:
+  environment: prod
+  owner: Gelo
+  layer: web
+
+image:
+  repository: nginx
+  tag: "1.27.4"
+  pullPolicy: IfNotPresent
+
+tls:
+  enabled: true
+
+networkPolicy:
+  enabled: true
+
+pdb:
+  create: false
+
+metrics:
+  enabled: true 
+
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+
+  

@@ -1,0 +1,15 @@
+replicaCount: 1
+
+podLabels:
+  environment: dev
+
+metrics:
+  enabled: false
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 32Mi
+  limits:
+    cpu: 100m
+    memory: 128Mi

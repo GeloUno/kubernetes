@@ -1,0 +1,18 @@
+replicaCount: 2
+
+podLabels:
+  environment: test
+
+metrics:
+  enabled: true
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 100m
+    memory: 256Mi
+
+
+  
