@@ -1,0 +1,30 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: prometheus-example-app
+  namespace: gk-21-app
+spec:
+  route:
+    receiver: app-webhook
+    groupBy:
+      - alertname
+    groupWait: 10s
+    groupInterval: 30s
+    repeatInterval: 1h
+    matchers:
+      - name: severity
+        value: warning
+        matchType: "="
+
+  receivers:
+    - name: app-webhook
+      webhookConfigs:
+        - url: http://alert-webhook.gk-21-app.svc.cluster.local:8080/
+          sendResolved: true
+
+      emailConfigs:
+        - to: devops@gk.local
+          from: alertmanager@gk.local
+          smarthost: mailpit.gk-21-app.svc.cluster.local:1025
+          requireTLS: false
+          sendResolved: true
