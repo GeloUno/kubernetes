@@ -1,7 +1,6 @@
 ─ helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --version 87.19.2 --namespace monitoring  --values
 values.monitoring.yaml --wait --timeout 10m
 
-
 ╰─ helm upgrade --install monitoring prometheus-community/kube-prometheus-stack --version 87.19.2 --namespace monitoring --create-namespace  --values values.monitoring.yaml --wait 
 
 kubectl get pods -n monitoring -o custom-columns='POD:.metadata.name, CPU_REQ:.spec.containers[*].resources.requests.cpu'
