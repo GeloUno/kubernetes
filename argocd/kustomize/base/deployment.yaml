@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gk-web
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: gk-web
+  template:
+    metadata:
+      labels:
+        app: gk-web
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27
+          ports:
+            - containerPort: 80
