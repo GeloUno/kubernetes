@@ -1,0 +1,27 @@
+
+fullnameOverride: "gk-web-argocd-helm"
+
+replicaCount: 2
+
+image:
+  repository: nginx 
+  pullPolicy: IfNotPresent  
+  tag: "1.31.4"
+
+
+service:
+
+  type: ClusterIP 
+  port: 80
+
+podLabels:
+  app: gk-web-argocd-helm
+  layer: web
+  owner: geloke59
+
+metrics:
+  enabled: true
+
+autoscaling:
+  enabled: false
+  

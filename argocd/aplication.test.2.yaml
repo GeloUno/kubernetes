@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gk-web-test-2
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: git@gitlab.com:geloke59/argocd.git
+    targetRevision: master
+    path: .
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: ns-gk-22-test-2
+    
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: false
+      enabled: true
+    syncOptions:
+      - CreateNamespace=true
