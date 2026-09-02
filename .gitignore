@@ -1,0 +1,12 @@
+*.md
+
+# plany kursu - nie publikować
+plan-kursu-k8s.md
+plan-pelny-k8s.md
+roadmapa-k8s-lab22-37.md
+
+# notatki cli z hasłami - nie publikować
+argocd/cli.txt
+
+# katalog Claude Code - nie publikować
+.claude/
